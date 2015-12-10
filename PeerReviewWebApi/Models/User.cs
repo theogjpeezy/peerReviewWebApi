@@ -13,7 +13,7 @@ namespace PeerReviewWebApi.Models {
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public string Email { get; set; }
-		public User Manager { get; set; }
+		public string ManagerName { get; set; }
 		public IEnumerable<User> TeamMembers { get; set; }
 		public IEnumerable<Goal> Goals { get; set; }
 	}

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Web;
+using System.Xml.Xsl;
 using Microsoft.Practices.EnterpriseLibrary.Data;
 
 namespace PeerReviewWebApi.Models {
@@ -11,6 +13,8 @@ namespace PeerReviewWebApi.Models {
 
 		private User _user = new User();
 		private const string GET_USER_SPROC = "getUserInfo";
+		private const string GET_MANAGER_SPROC = "getManagerOfUser";
+		private const string GET_GOALS_SPROC = "getAllActiveGoalsForUser";
 
 		public User Get(int id) {
 			
@@ -18,14 +22,14 @@ namespace PeerReviewWebApi.Models {
 			
 			// connect to the DB
 			DatabaseProviderFactory dbFactory = new DatabaseProviderFactory();
-		    Database peerReviewDB = dbFactory.Create("PeerReviewDatabase");
+		    Database peerReviewDb = dbFactory.Create("PeerReviewDatabase");
 			
 			// Get the basic user information
-			using (DbCommand dbCommand = peerReviewDB.GetSqlStringCommand(GET_USER_SPROC)) {
-				dbCommand.CommandType = CommandType.StoredProcedure;
-				peerReviewDB.AddInParameter(dbCommand, "userId", DbType.Int16, id);
+			using (DbCommand getUserCommand = peerReviewDb.GetSqlStringCommand(GET_USER_SPROC)) {
+				getUserCommand.CommandType = CommandType.StoredProcedure;
+				peerReviewDb.AddInParameter(getUserCommand, "userId", DbType.Int16, id);
 
-				using (IDataReader sprocReader = peerReviewDB.ExecuteReader(dbCommand)) {
+				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getUserCommand)) {
 					while (sprocReader.Read()) {
 						_user.Id = id;
 						_user.FirstName = sprocReader["firstName"].ToString();
@@ -35,11 +39,40 @@ namespace PeerReviewWebApi.Models {
 				}
 			}
 
+			// Get the users's goals
+			Collection<Goal> goals = new Collection<Goal>();
+		
+			using (DbCommand getGoalsForUserSproc = peerReviewDb.GetSqlStringCommand(GET_GOALS_SPROC)) {
+				getGoalsForUserSproc.CommandType = CommandType.StoredProcedure;
+				peerReviewDb.AddInParameter(getGoalsForUserSproc,"userId",DbType.Int16,id);
+				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getGoalsForUserSproc)) {
+					while (sprocReader.Read()) {
+						goals.Add(new Goal {
+							BeginDateTime = (DateTime) sprocReader["beginDate"],
+							Details = sprocReader["details"].ToString(),
+							EndDateTime = (DateTime) sprocReader["endDate"],
+							IsActive = (bool) sprocReader["isActive"],
+							Title = sprocReader["title"].ToString()
+						});
+					}
+				}
+				_user.Goals = goals;
+			}
+
 			// Get the user's manager
+			using (DbCommand getUserCommand = peerReviewDb.GetSqlStringCommand(GET_MANAGER_SPROC)) {
+				getUserCommand.CommandType = CommandType.StoredProcedure;
+				peerReviewDb.AddInParameter(getUserCommand, "userId", DbType.Int16, id);
+
+				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getUserCommand)) {
+					while (sprocReader.Read()) {
+						// more than one manager could be bad?  worry about this later
+						_user.ManagerName = sprocReader["firstName"] + " " + sprocReader["lastName"];
+					}
+				}
+			}
 
 			// Get the user's team
-
-			// Get the user's goals
 			
 			// Send back the result
 			return _user;
