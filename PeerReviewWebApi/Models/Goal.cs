@@ -15,6 +15,7 @@ namespace PeerReviewWebApi.Models {
 		public DateTime EndDateTime { get; set; }
 		public string Details { get; set; }
 		public bool IsActive { get; set; }
+		public int UserId { get; set; }
 
 	}
 }
