@@ -15,6 +15,7 @@ namespace PeerReviewWebApi.Models {
 		private const string GET_USER_SPROC = "getUserInfo";
 		private const string GET_MANAGER_SPROC = "getManagerOfUser";
 		private const string GET_GOALS_SPROC = "getAllActiveGoalsForUser";
+		private const string GET_TEAM_SPROC = "getTeammatesOfUser";
 
 		public User Get(int id) {
 			
@@ -42,12 +43,14 @@ namespace PeerReviewWebApi.Models {
 			// Get the users's goals
 			Collection<Goal> goals = new Collection<Goal>();
 		
-			using (DbCommand getGoalsForUserSproc = peerReviewDb.GetSqlStringCommand(GET_GOALS_SPROC)) {
+			using (
+				DbCommand getGoalsForUserSproc = peerReviewDb.GetSqlStringCommand(GET_GOALS_SPROC)) {
 				getGoalsForUserSproc.CommandType = CommandType.StoredProcedure;
 				peerReviewDb.AddInParameter(getGoalsForUserSproc,"userId",DbType.Int16,id);
 				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getGoalsForUserSproc)) {
 					while (sprocReader.Read()) {
 						goals.Add(new Goal {
+							Id = (int) sprocReader["goalId"],
 							BeginDateTime = (DateTime) sprocReader["beginDate"],
 							Details = sprocReader["details"].ToString(),
 							EndDateTime = (DateTime) sprocReader["endDate"],
@@ -60,11 +63,11 @@ namespace PeerReviewWebApi.Models {
 			}
 
 			// Get the user's manager
-			using (DbCommand getUserCommand = peerReviewDb.GetSqlStringCommand(GET_MANAGER_SPROC)) {
-				getUserCommand.CommandType = CommandType.StoredProcedure;
-				peerReviewDb.AddInParameter(getUserCommand, "userId", DbType.Int16, id);
+			using (DbCommand getUserManagerSproc = peerReviewDb.GetSqlStringCommand(GET_MANAGER_SPROC)) {
+				getUserManagerSproc.CommandType = CommandType.StoredProcedure;
+				peerReviewDb.AddInParameter(getUserManagerSproc, "userId", DbType.Int16, id);
 
-				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getUserCommand)) {
+				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getUserManagerSproc)) {
 					while (sprocReader.Read()) {
 						// more than one manager could be bad?  worry about this later
 						_user.ManagerName = sprocReader["firstName"] + " " + sprocReader["lastName"];
@@ -73,6 +76,19 @@ namespace PeerReviewWebApi.Models {
 			}
 
 			// Get the user's team
+			Collection<string> teamMembers = new Collection<string>();
+
+			using (DbCommand getUserTeamSproc = peerReviewDb.GetSqlStringCommand(GET_TEAM_SPROC)) {
+				getUserTeamSproc.CommandType = CommandType.StoredProcedure;
+				peerReviewDb.AddInParameter(getUserTeamSproc,"userId",DbType.Int16,id);
+
+				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getUserTeamSproc)) {
+					while (sprocReader.Read()) {
+						teamMembers.Add(sprocReader["firstName"] + " " + sprocReader["lastName"]);			
+					}
+				}
+				_user.TeamMembers = teamMembers;
+			}
 			
 			// Send back the result
 			return _user;
