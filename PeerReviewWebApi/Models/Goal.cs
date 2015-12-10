@@ -6,7 +6,7 @@ using System.Web;
 namespace PeerReviewWebApi.Models {
 
 	/// <summary>
-	/// A model that represents a Goal 
+	/// A model that represents a Goal that someone has made. 
 	/// </summary>
 	public class Goal {
 		public int Id { get; set; }
