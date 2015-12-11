@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,10 +13,6 @@ namespace PeerReviewWebApi.Controllers
     {
 		static readonly IGoalRepository GoalRepo = new GoalRepository();
 
-		public GoalController() {
-			int i = 1;
-		}
-
 		[HttpPost]
 		public HttpResponseMessage PostGoal(Goal newGoal) {
 			Goal createdGoal = GoalRepo.CreateGoal(newGoal);
@@ -28,6 +23,14 @@ namespace PeerReviewWebApi.Controllers
 			var response = Request.CreateResponse<Goal>(HttpStatusCode.Created, createdGoal);
 			
 			return response;
+		}
+
+		public IEnumerable<Goal> GetGoal(int userId) {
+			IEnumerable<Goal> goalListForUser = GoalRepo.GetGoalsByUserId(userId);
+			if (!goalListForUser.Any()) {
+				throw new HttpResponseException(HttpStatusCode.NotFound);
+			}
+			return goalListForUser;
 		}
     }
 }
