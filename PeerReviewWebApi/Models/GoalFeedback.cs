@@ -9,7 +9,6 @@ namespace PeerReviewWebApi.Models {
 	/// </summary>
 	public class GoalFeedback {
 		public int Id { get; set; }
-		public int UserId { get; set; }
 		public int GoalId { get; set; }
 		public DateTime DateTimeSubmitted { get; set; }
 		public int Rating { get; set; }

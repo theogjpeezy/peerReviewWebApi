@@ -19,7 +19,6 @@ namespace PeerReviewWebApi.Models {
 			int newGoalFeedbackId;
 			using (DbCommand createGoalFeedbackSproc = _peerReviewDb.GetStoredProcCommand(CREATE_FEEDBACK_SPROC)) {
 				createGoalFeedbackSproc.CommandType = CommandType.StoredProcedure;
-				_peerReviewDb.AddInParameter(createGoalFeedbackSproc, "userId", DbType.Int16, newGoalFeedback.UserId);
 				_peerReviewDb.AddInParameter(createGoalFeedbackSproc, "reviewerId", DbType.Int16, newGoalFeedback.ReviewerId);
 				_peerReviewDb.AddInParameter(createGoalFeedbackSproc, "goalId", DbType.Int16, newGoalFeedback.GoalId);
 				_peerReviewDb.AddInParameter(createGoalFeedbackSproc, "submitted", DbType.DateTime, newGoalFeedback.DateTimeSubmitted);
