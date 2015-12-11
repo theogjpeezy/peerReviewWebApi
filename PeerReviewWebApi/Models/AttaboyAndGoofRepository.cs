@@ -60,18 +60,19 @@ namespace PeerReviewWebApi.Models {
 
 		public IEnumerable<Attaboy> GetAllAttaboys(int userId) {
 			Collection<Attaboy> attaboys = new Collection<Attaboy>();
-
-			using (
+		    using (
 				DbCommand getGoalsForUserSproc = _peerReviewDb.GetSqlStringCommand(GET_ATTABOYS_SPROC)) {
 				getGoalsForUserSproc.CommandType = CommandType.StoredProcedure;
 				_peerReviewDb.AddInParameter(getGoalsForUserSproc, "userId", DbType.Int16, userId);
 				using (IDataReader sprocReader = _peerReviewDb.ExecuteReader(getGoalsForUserSproc)) {
 					while (sprocReader.Read()) {
+					    int submitterId;
+					    int.TryParse(sprocReader["submitterId"].ToString(), out submitterId);
 						attaboys.Add(new Attaboy {
 							Id = int.Parse(sprocReader["feedbackId"].ToString()),
 							DateTimeSubmitted = DateTime.Parse(sprocReader["submitted"].ToString()),
 							Comment = sprocReader["comment"].ToString(),
-							SubmitterId = int.Parse(sprocReader["submitterId"].ToString())
+							SubmitterId = submitterId > 0 ? (int?)submitterId : null
 						});
 					}
 				}

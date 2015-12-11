@@ -9,7 +9,7 @@ namespace PeerReviewWebApi.Models {
 		public int UserId { get; set; }
 		public DateTime DateTimeSubmitted { get; set; }
 		public string Comment { get; set; }
-		public int SubmitterId { get; set; }
+		public int? SubmitterId { get; set; }
 		public bool IsAnonymous { get; set; }
 	}
 }
