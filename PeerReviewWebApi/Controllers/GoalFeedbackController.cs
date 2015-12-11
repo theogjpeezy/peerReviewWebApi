@@ -25,6 +25,16 @@ namespace PeerReviewWebApi.Controllers
 			return response;
 		}
 
+		public IEnumerable<GoalWithFeedback> GetGoalFeedback(int userId) {
+			IEnumerable<GoalWithFeedback> goalsWithFeedbacks = GoalFeedbackRepo.GetGoalsWithFeedback(userId);
+
+			if (goalsWithFeedbacks == null) {
+				throw new HttpResponseException(HttpStatusCode.NotFound);
+			}
+
+			return goalsWithFeedbacks;
+		}
+
 
     }
 }

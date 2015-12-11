@@ -231,6 +231,7 @@
     <Compile Include="Models\GoalFeedback.cs" />
     <Compile Include="Models\GoalFeedbackRepository.cs" />
     <Compile Include="Models\GoalRepository.cs" />
+    <Compile Include="Models\GoalWithFeedback.cs" />
     <Compile Include="Models\Goof.cs" />
     <Compile Include="Models\IAttaboyAndGoofRepository.cs" />
     <Compile Include="Models\IdentityModels.cs" />

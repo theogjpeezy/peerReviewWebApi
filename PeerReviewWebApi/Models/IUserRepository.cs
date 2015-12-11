@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PeerReviewWebApi.Models {
+﻿namespace PeerReviewWebApi.Models {
 
 	/// <summary>
 	/// Interface defining the required functions for working with Users
