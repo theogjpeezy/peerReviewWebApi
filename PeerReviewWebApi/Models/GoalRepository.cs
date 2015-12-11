@@ -9,8 +9,11 @@ namespace PeerReviewWebApi.Models {
 	public class GoalRepository : IGoalRepository {
 
 		private const string CREATE_GOAL_SPROC = "createGoal";
+		private const string UPDATE_GOAL_SPROC = "updateGoalInfo";
+		private const string DEACTIVATE_GOAL_SPROC = "deactivateGoal";
 	    private const string GET_GOAL_INFO_SPROC = "getGoalInfo";
 		private const string GET_ALL_USER_GOALS_SPROC = "getAllGoalsForUser";
+	    private const string DELETE_GOAL_SPROC = "deleteGoal";
 
 		private static readonly DatabaseProviderFactory dbFactory = new DatabaseProviderFactory();
 		private readonly Database _peerReviewDb = dbFactory.Create("PeerReviewDatabase");
@@ -32,7 +35,7 @@ namespace PeerReviewWebApi.Models {
 				newGoalId = (int)_peerReviewDb.ExecuteScalar(createGoalSproc);
 			}
 
-			Goal createdGoal = newGoal;
+			Goal createdGoal = GetGoal(newGoalId);
 			createdGoal.Id = newGoalId;
 
 			return createdGoal;
@@ -61,11 +64,36 @@ namespace PeerReviewWebApi.Models {
 		}
 
 		public Goal UpdateGoal(Goal goalToUpdate) {
-			throw new NotImplementedException();
+			using (DbCommand updateGoalSproc = _peerReviewDb.GetStoredProcCommand(UPDATE_GOAL_SPROC)) {
+				updateGoalSproc.CommandType = CommandType.StoredProcedure;
+				_peerReviewDb.AddInParameter(updateGoalSproc, "goalId", DbType.Int16, goalToUpdate.Id);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "title", DbType.String, goalToUpdate.Title);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "beginDate", DbType.DateTime, goalToUpdate.BeginDateTime);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "endDate", DbType.DateTime, goalToUpdate.EndDateTime);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "details", DbType.String, goalToUpdate.Details);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "userGoalNumber", DbType.Int16, null);
+				_peerReviewDb.ExecuteScalar(updateGoalSproc);
+			}
+
+			if (!goalToUpdate.IsActive) {
+				using (DbCommand deactivateGoalSproc = _peerReviewDb.GetStoredProcCommand(DEACTIVATE_GOAL_SPROC)) {
+					deactivateGoalSproc.CommandType = CommandType.StoredProcedure;
+					_peerReviewDb.AddInParameter(deactivateGoalSproc, "goalId", DbType.Int16, goalToUpdate.Id);
+					_peerReviewDb.ExecuteScalar(deactivateGoalSproc);
+				}	
+			}
+			Goal updatedGoal = GetGoal(goalToUpdate.Id);
+			return updatedGoal;
 		}
 
 		public void DeleteGoal(int id) {
-			throw new NotImplementedException();
+            DatabaseProviderFactory dbFactory = new DatabaseProviderFactory();
+            Database peerReviewDb = dbFactory.Create("PeerReviewDatabase");
+		    using (DbCommand deleteGoal = peerReviewDb.GetStoredProcCommand(DELETE_GOAL_SPROC)) {
+		        deleteGoal.CommandType = CommandType.StoredProcedure;
+                peerReviewDb.AddInParameter(deleteGoal, "goalId", DbType.Int32, id);
+		        peerReviewDb.ExecuteNonQuery(deleteGoal);
+		    }
 		}
 
 		public IEnumerable<Goal> GetGoalsByUserId(int userId) {

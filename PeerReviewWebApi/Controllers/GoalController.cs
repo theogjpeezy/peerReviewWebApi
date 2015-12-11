@@ -37,5 +37,16 @@ namespace PeerReviewWebApi.Controllers
 	    public HttpResponseMessage Get(int id) {
 	        return Request.CreateResponse(HttpStatusCode.OK, GoalRepo.GetGoal(id));
 	    }
+
+		public Goal PutGoal(Goal goalToUpdate) {
+			return GoalRepo.UpdateGoal(goalToUpdate);
+		}
+
+
+	    [HttpDelete]
+	    public HttpResponseMessage Delete(int id) {
+	        GoalRepo.DeleteGoal(id);
+	        return Request.CreateResponse(HttpStatusCode.OK);
+	    }
     }
 }
