@@ -68,11 +68,10 @@ namespace PeerReviewWebApi.Models {
 				using (IDataReader sprocReader = _peerReviewDb.ExecuteReader(getGoalsForUserSproc)) {
 					while (sprocReader.Read()) {
 						attaboys.Add(new Attaboy {
-							Id = (int)sprocReader["feedbackId"],
-							DateTimeSubmitted = (DateTime)sprocReader["submitted"],
+							Id = int.Parse(sprocReader["feedbackId"].ToString()),
+							DateTimeSubmitted = DateTime.Parse(sprocReader["submitted"].ToString()),
 							Comment = sprocReader["comment"].ToString(),
-							IsAnonymous = (bool)sprocReader["isAnonymous"],
-							SubmitterId = (int)sprocReader["submitterId"]
+							SubmitterId = int.Parse(sprocReader["submitterId"].ToString())
 						});
 					}
 				}

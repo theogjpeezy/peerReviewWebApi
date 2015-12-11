@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -23,6 +25,10 @@ namespace PeerReviewWebApi.Controllers
 			var response = Request.CreateResponse<Attaboy>(HttpStatusCode.Created, createdAttaboy);
 
 			return response;
+		}
+
+		public IEnumerable<Attaboy> GetAttaboy(int userId) {
+			return _attaboyAndGoofRepo.GetAllAttaboys(userId);
 		}
 
     }
