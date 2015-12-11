@@ -34,7 +34,7 @@ namespace PeerReviewWebApi.Controllers
 		}
 
 	    [HttpGet]
-	    public HttpResponseMessage GetGoal(int id) {
+	    public HttpResponseMessage Get(int id) {
 	        return Request.CreateResponse(HttpStatusCode.OK, GoalRepo.GetGoal(id));
 	    }
     }
