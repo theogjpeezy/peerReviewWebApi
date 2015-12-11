@@ -11,6 +11,7 @@ namespace PeerReviewWebApi.Models {
 		private const string CREATE_GOAL_SPROC = "createGoal";
 	    private const string GET_GOAL_INFO_SPROC = "getGoalInfo";
 		private const string GET_ALL_USER_GOALS_SPROC = "getAllGoalsForUser";
+	    private const string DELETE_GOAL_SPROC = "deleteGoal";
 
 		private static readonly DatabaseProviderFactory dbFactory = new DatabaseProviderFactory();
 		private readonly Database _peerReviewDb = dbFactory.Create("PeerReviewDatabase");
@@ -65,7 +66,13 @@ namespace PeerReviewWebApi.Models {
 		}
 
 		public void DeleteGoal(int id) {
-			throw new NotImplementedException();
+            DatabaseProviderFactory dbFactory = new DatabaseProviderFactory();
+            Database peerReviewDb = dbFactory.Create("PeerReviewDatabase");
+		    using (DbCommand deleteGoal = peerReviewDb.GetStoredProcCommand(DELETE_GOAL_SPROC)) {
+		        deleteGoal.CommandType = CommandType.StoredProcedure;
+                peerReviewDb.AddInParameter(deleteGoal, "goalId", DbType.Int32, id);
+		        peerReviewDb.ExecuteNonQuery(deleteGoal);
+		    }
 		}
 
 		public IEnumerable<Goal> GetGoalsByUserId(int userId) {
