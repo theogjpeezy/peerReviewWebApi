@@ -9,6 +9,8 @@ namespace PeerReviewWebApi.Models {
 	public class GoalRepository : IGoalRepository {
 
 		private const string CREATE_GOAL_SPROC = "createGoal";
+		private const string UPDATE_GOAL_SPROC = "updateGoalInfo";
+		private const string DEACTIVATE_GOAL_SPROC = "deactivateGoal";
 		private const string GET_ALL_USER_GOALS_SPROC = "getAllGoalsForUser";
 
 		private static readonly DatabaseProviderFactory dbFactory = new DatabaseProviderFactory();
@@ -31,7 +33,7 @@ namespace PeerReviewWebApi.Models {
 				newGoalId = (int)_peerReviewDb.ExecuteScalar(createGoalSproc);
 			}
 
-			Goal createdGoal = newGoal;
+			Goal createdGoal = newGoal; // replace this later with the GetGoal below.
 			createdGoal.Id = newGoalId;
 
 			return createdGoal;
@@ -42,7 +44,27 @@ namespace PeerReviewWebApi.Models {
 		}
 
 		public Goal UpdateGoal(Goal goalToUpdate) {
-			throw new NotImplementedException();
+
+			using (DbCommand createGoalSproc = _peerReviewDb.GetStoredProcCommand(UPDATE_GOAL_SPROC)) {
+				createGoalSproc.CommandType = CommandType.StoredProcedure;
+				_peerReviewDb.AddInParameter(createGoalSproc, "goalId", DbType.Int16, goalToUpdate.Id);
+				_peerReviewDb.AddInParameter(createGoalSproc, "title", DbType.String, goalToUpdate.Title);
+				_peerReviewDb.AddInParameter(createGoalSproc, "beginDate", DbType.DateTime, goalToUpdate.BeginDateTime);
+				_peerReviewDb.AddInParameter(createGoalSproc, "endDate", DbType.DateTime, goalToUpdate.EndDateTime);
+				_peerReviewDb.AddInParameter(createGoalSproc, "details", DbType.String, goalToUpdate.Details);
+				_peerReviewDb.AddInParameter(createGoalSproc, "userGoalNumber", DbType.Int16, null);
+
+			}
+
+			if (!goalToUpdate.IsActive) {
+				using (DbCommand createGoalSproc = _peerReviewDb.GetStoredProcCommand(DEACTIVATE_GOAL_SPROC)) {
+					createGoalSproc.CommandType = CommandType.StoredProcedure;
+					_peerReviewDb.AddInParameter(createGoalSproc, "goalId", DbType.Int16, goalToUpdate.Id);
+					_peerReviewDb.ExecuteScalar(createGoalSproc);
+				}	
+			}
+			Goal updatedGoal = goalToUpdate; // replace this later with GetGoal(id)
+			return updatedGoal;
 		}
 
 		public void DeleteGoal(int id) {
