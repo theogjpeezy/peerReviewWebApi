@@ -54,7 +54,8 @@ namespace PeerReviewWebApi.Models {
 							GoalId = goal.Id,
 							Id = int.Parse(sprocReader["feedbackId"].ToString()),
 							Rating = int.Parse(sprocReader["rating"].ToString()),
-							ReviewerId = int.Parse(sprocReader["reviewerId"].ToString())
+							ReviewerId = int.Parse(sprocReader["reviewerId"].ToString()),
+							ReviewerName = sprocReader["submitter"].ToString()
 						});
 					}
 				}	

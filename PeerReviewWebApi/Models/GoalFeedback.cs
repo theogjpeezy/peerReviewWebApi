@@ -11,5 +11,6 @@ namespace PeerReviewWebApi.Models {
 		public int Rating { get; set; }
 		public string Comments { get; set; }
 		public int ReviewerId { get; set; }
+		public string ReviewerName { get; set; }
 	}
 }
