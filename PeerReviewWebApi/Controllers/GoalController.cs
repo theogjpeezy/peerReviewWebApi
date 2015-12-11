@@ -32,5 +32,10 @@ namespace PeerReviewWebApi.Controllers
 			}
 			return goalListForUser;
 		}
+
+	    [HttpGet]
+	    public HttpResponseMessage Get(int id) {
+	        return Request.CreateResponse(HttpStatusCode.OK, GoalRepo.GetGoal(id));
+	    }
     }
 }

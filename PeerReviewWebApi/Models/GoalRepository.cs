@@ -11,6 +11,7 @@ namespace PeerReviewWebApi.Models {
 		private const string CREATE_GOAL_SPROC = "createGoal";
 		private const string UPDATE_GOAL_SPROC = "updateGoalInfo";
 		private const string DEACTIVATE_GOAL_SPROC = "deactivateGoal";
+	    private const string GET_GOAL_INFO_SPROC = "getGoalInfo";
 		private const string GET_ALL_USER_GOALS_SPROC = "getAllGoalsForUser";
 
 		private static readonly DatabaseProviderFactory dbFactory = new DatabaseProviderFactory();
@@ -40,7 +41,25 @@ namespace PeerReviewWebApi.Models {
 		}
 
 		public Goal GetGoal(int id) {
-			throw new NotImplementedException();
+            DatabaseProviderFactory dbFactory = new DatabaseProviderFactory();
+            Database peerReviewDb = dbFactory.Create("PeerReviewDatabase");
+            Goal goal = new Goal();
+            using (DbCommand getGoalInfo = peerReviewDb.GetStoredProcCommand(GET_GOAL_INFO_SPROC)) {
+                getGoalInfo.CommandType = CommandType.StoredProcedure;
+                peerReviewDb.AddInParameter(getGoalInfo, "goalId", DbType.Int32, id);
+                using (IDataReader reader = peerReviewDb.ExecuteReader(getGoalInfo)) {
+                    while (reader.Read()) {
+                        goal.BeginDateTime = DateTime.Parse(reader["beginDate"].ToString());
+                        goal.EndDateTime = DateTime.Parse(reader["endDate"].ToString());
+                        goal.Id = int.Parse(reader["goalId"].ToString());
+                        goal.UserId = int.Parse(reader["userId"].ToString());
+                        goal.Title = reader["title"].ToString();
+                        goal.Details = reader["details"].ToString();
+                        goal.IsActive = bool.Parse(reader["isActive"].ToString());
+                    }
+                }
+            }
+		    return goal;
 		}
 
 		public Goal UpdateGoal(Goal goalToUpdate) {
