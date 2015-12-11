@@ -53,7 +53,7 @@ namespace PeerReviewWebApi.Models {
 			}
 
 			// Get the user's team
-			Collection<string> teamMembers = new Collection<string>();
+			Collection<User> teamMembers = new Collection<User>();
 
 			using (DbCommand getUserTeamSproc = peerReviewDb.GetSqlStringCommand(GET_TEAM_SPROC)) {
 				getUserTeamSproc.CommandType = CommandType.StoredProcedure;
@@ -61,7 +61,11 @@ namespace PeerReviewWebApi.Models {
 
 				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getUserTeamSproc)) {
 					while (sprocReader.Read()) {
-						teamMembers.Add(sprocReader["firstName"] + " " + sprocReader["lastName"]);			
+						teamMembers.Add(new User {
+						    FirstName = sprocReader["firstName"].ToString(),
+                            LastName = sprocReader["lastName"].ToString(),
+                            Id = int.Parse(sprocReader["id"].ToString())
+						});			
 					}
 				}
 				_user.TeamMembers = teamMembers;
