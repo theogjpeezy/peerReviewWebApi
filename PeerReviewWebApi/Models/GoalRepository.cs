@@ -34,7 +34,7 @@ namespace PeerReviewWebApi.Models {
 				newGoalId = (int)_peerReviewDb.ExecuteScalar(createGoalSproc);
 			}
 
-			Goal createdGoal = newGoal; // replace this later with the GetGoal below.
+			Goal createdGoal = GetGoal(newGoalId);
 			createdGoal.Id = newGoalId;
 
 			return createdGoal;
@@ -63,26 +63,25 @@ namespace PeerReviewWebApi.Models {
 		}
 
 		public Goal UpdateGoal(Goal goalToUpdate) {
-
-			using (DbCommand createGoalSproc = _peerReviewDb.GetStoredProcCommand(UPDATE_GOAL_SPROC)) {
-				createGoalSproc.CommandType = CommandType.StoredProcedure;
-				_peerReviewDb.AddInParameter(createGoalSproc, "goalId", DbType.Int16, goalToUpdate.Id);
-				_peerReviewDb.AddInParameter(createGoalSproc, "title", DbType.String, goalToUpdate.Title);
-				_peerReviewDb.AddInParameter(createGoalSproc, "beginDate", DbType.DateTime, goalToUpdate.BeginDateTime);
-				_peerReviewDb.AddInParameter(createGoalSproc, "endDate", DbType.DateTime, goalToUpdate.EndDateTime);
-				_peerReviewDb.AddInParameter(createGoalSproc, "details", DbType.String, goalToUpdate.Details);
-				_peerReviewDb.AddInParameter(createGoalSproc, "userGoalNumber", DbType.Int16, null);
-
+			using (DbCommand updateGoalSproc = _peerReviewDb.GetStoredProcCommand(UPDATE_GOAL_SPROC)) {
+				updateGoalSproc.CommandType = CommandType.StoredProcedure;
+				_peerReviewDb.AddInParameter(updateGoalSproc, "goalId", DbType.Int16, goalToUpdate.Id);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "title", DbType.String, goalToUpdate.Title);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "beginDate", DbType.DateTime, goalToUpdate.BeginDateTime);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "endDate", DbType.DateTime, goalToUpdate.EndDateTime);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "details", DbType.String, goalToUpdate.Details);
+				_peerReviewDb.AddInParameter(updateGoalSproc, "userGoalNumber", DbType.Int16, null);
+				_peerReviewDb.ExecuteScalar(updateGoalSproc);
 			}
 
 			if (!goalToUpdate.IsActive) {
-				using (DbCommand createGoalSproc = _peerReviewDb.GetStoredProcCommand(DEACTIVATE_GOAL_SPROC)) {
-					createGoalSproc.CommandType = CommandType.StoredProcedure;
-					_peerReviewDb.AddInParameter(createGoalSproc, "goalId", DbType.Int16, goalToUpdate.Id);
-					_peerReviewDb.ExecuteScalar(createGoalSproc);
+				using (DbCommand deactivateGoalSproc = _peerReviewDb.GetStoredProcCommand(DEACTIVATE_GOAL_SPROC)) {
+					deactivateGoalSproc.CommandType = CommandType.StoredProcedure;
+					_peerReviewDb.AddInParameter(deactivateGoalSproc, "goalId", DbType.Int16, goalToUpdate.Id);
+					_peerReviewDb.ExecuteScalar(deactivateGoalSproc);
 				}	
 			}
-			Goal updatedGoal = goalToUpdate; // replace this later with GetGoal(id)
+			Goal updatedGoal = GetGoal(goalToUpdate.Id);
 			return updatedGoal;
 		}
 
