@@ -6,16 +6,12 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using PeerReviewWebApi.Models;
 
-namespace PeerReviewWebApi.Controllers
-{
+namespace PeerReviewWebApi.Controllers {
 	[EnableCors("*", "*", "*")]
-    public class GoalController : ApiController
-    {
-		static readonly IGoalRepository GoalRepo = new GoalRepository();
-
-		[HttpPost]
+	public class AttaboyOrGoofController : ApiController{
+		
 		public HttpResponseMessage PostGoal(Goal newGoal) {
-			Goal createdGoal = GoalRepo.CreateGoal(newGoal);
+			AttaboyAndGoof attaboyOrGoof = GoalRepo.CreateGoal(newGoal);
 			if (createdGoal == null) {
 				throw new HttpResponseException(HttpStatusCode.NotFound);
 			}
@@ -33,20 +29,9 @@ namespace PeerReviewWebApi.Controllers
 			return goalListForUser;
 		}
 
-	    [HttpGet]
 	    public HttpResponseMessage Get(int id) {
 	        return Request.CreateResponse(HttpStatusCode.OK, GoalRepo.GetGoal(id));
 	    }
-
-		public Goal PutGoal(Goal goalToUpdate) {
-			return GoalRepo.UpdateGoal(goalToUpdate);
-		}
-
-
-	    [HttpDelete]
-	    public HttpResponseMessage Delete(int id) {
-	        GoalRepo.DeleteGoal(id);
-	        return Request.CreateResponse(HttpStatusCode.OK);
-	    }
     }
+	}
 }
