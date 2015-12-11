@@ -8,11 +8,12 @@ namespace PeerReviewWebApi.Models {
 	/// Model that represents the feedback elements for a users goal.
 	/// </summary>
 	public class GoalFeedback {
-		public User User { get; set; }
-		public Goal Goal { get; set; }
+		public int Id { get; set; }
+		public int UserId { get; set; }
+		public int GoalId { get; set; }
 		public DateTime DateTimeSubmitted { get; set; }
 		public int Rating { get; set; }
 		public string Comments { get; set; }
-		public User Reviewer { get; set; }
+		public int ReviewerId { get; set; }
 	}
 }

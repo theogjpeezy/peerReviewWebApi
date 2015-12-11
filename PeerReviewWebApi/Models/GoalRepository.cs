@@ -31,7 +31,7 @@ namespace PeerReviewWebApi.Models {
 				_peerReviewDb.AddInParameter(createGoalSproc, "isActive", DbType.Boolean, newGoal.IsActive);
 				_peerReviewDb.AddInParameter(createGoalSproc, "userGoalNumber", DbType.Int16, null); // null for now, incorporate this later
 
-				newGoalId = (int)_peerReviewDb.ExecuteScalar(createGoalSproc);
+				newGoalId = int.Parse(_peerReviewDb.ExecuteScalar(createGoalSproc).ToString());
 			}
 
 			Goal createdGoal = GetGoal(newGoalId);
