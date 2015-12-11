@@ -72,7 +72,8 @@ namespace PeerReviewWebApi.Models {
 							Id = int.Parse(sprocReader["feedbackId"].ToString()),
 							DateTimeSubmitted = DateTime.Parse(sprocReader["submitted"].ToString()),
 							Comment = sprocReader["comment"].ToString(),
-							SubmitterId = submitterId > 0 ? (int?)submitterId : null
+							SubmitterId = submitterId > 0 ? (int?)submitterId : null,
+							SubmitterName = sprocReader["submitter"].ToString()
 						});
 					}
 				}

@@ -7,6 +7,7 @@ namespace PeerReviewWebApi.Models {
 	public abstract class AttaboyAndGoof {
 		public int Id { get; set; }
 		public int UserId { get; set; }
+		public string SubmitterName { get; set; }
 		public DateTime DateTimeSubmitted { get; set; }
 		public string Comment { get; set; }
 		public int? SubmitterId { get; set; }
