@@ -14,10 +14,6 @@ namespace PeerReviewWebApi.Controllers
     {
 		static readonly IGoalRepository GoalRepo = new GoalRepository();
 
-		public GoalController() {
-			int i = 1;
-		}
-
 		[HttpPost]
 		public HttpResponseMessage PostGoal(Goal newGoal) {
 			Goal createdGoal = GoalRepo.CreateGoal(newGoal);
@@ -29,5 +25,10 @@ namespace PeerReviewWebApi.Controllers
 			
 			return response;
 		}
+
+	    [HttpGet]
+	    public HttpResponseMessage GetGoal(int id) {
+	        return Request.CreateResponse(HttpStatusCode.OK, GoalRepo.GetGoal(id));
+	    }
     }
 }
