@@ -23,13 +23,13 @@ namespace PeerReviewWebApi.Models {
 			int newAttaboyId;
 			using (DbCommand createAttaboyCommand = _peerReviewDb.GetStoredProcCommand(CREATE_ATTABOY_SPROC)) {
 				createAttaboyCommand.CommandType = CommandType.StoredProcedure;
-				_peerReviewDb.AddInParameter(createAttaboyCommand, "userId", DbType.Int16, newAttaboy.User.Id);
+				_peerReviewDb.AddInParameter(createAttaboyCommand, "userId", DbType.Int16, newAttaboy.UserId);
 				_peerReviewDb.AddInParameter(createAttaboyCommand, "submitted", DbType.DateTime, newAttaboy.DateTimeSubmitted);
-				_peerReviewDb.AddInParameter(createAttaboyCommand, "comment", DbType.DateTime, newAttaboy.Comment);
-				_peerReviewDb.AddInParameter(createAttaboyCommand, "submitterId", DbType.String, newAttaboy.SubmitterId);
+				_peerReviewDb.AddInParameter(createAttaboyCommand, "comment", DbType.String, newAttaboy.Comment);
+				_peerReviewDb.AddInParameter(createAttaboyCommand, "submitterId", DbType.Int16, newAttaboy.SubmitterId);
 				_peerReviewDb.AddInParameter(createAttaboyCommand, "isAnonymous", DbType.Boolean, newAttaboy.IsAnonymous);
 				
-				newAttaboyId = (int)_peerReviewDb.ExecuteScalar(createAttaboyCommand);
+				newAttaboyId = int.Parse(_peerReviewDb.ExecuteScalar(createAttaboyCommand).ToString());
 			}
 
 			Attaboy createdAttaboy = newAttaboy;
@@ -42,7 +42,7 @@ namespace PeerReviewWebApi.Models {
 			int newGoofId;
 			using (DbCommand createGoofCommand = _peerReviewDb.GetStoredProcCommand(CREATE_GOOF_SPROC)) {
 				createGoofCommand.CommandType = CommandType.StoredProcedure;
-				_peerReviewDb.AddInParameter(createGoofCommand, "userId", DbType.Int16, newGoof.User.Id);
+				_peerReviewDb.AddInParameter(createGoofCommand, "userId", DbType.Int16, newGoof.UserId);
 				_peerReviewDb.AddInParameter(createGoofCommand, "submitted", DbType.DateTime, newGoof.DateTimeSubmitted);
 				_peerReviewDb.AddInParameter(createGoofCommand, "comment", DbType.DateTime, newGoof.Comment);
 				_peerReviewDb.AddInParameter(createGoofCommand, "submitterId", DbType.String, newGoof.SubmitterId);
