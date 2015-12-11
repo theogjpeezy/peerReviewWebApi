@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Web;
-using System.Xml.Xsl;
 using Microsoft.Practices.EnterpriseLibrary.Data;
 
 namespace PeerReviewWebApi.Models {
@@ -41,26 +36,8 @@ namespace PeerReviewWebApi.Models {
 			}
 
 			// Get the users's goals
-			Collection<Goal> goals = new Collection<Goal>();
-		
-			using (
-				DbCommand getGoalsForUserSproc = peerReviewDb.GetSqlStringCommand(GET_GOALS_SPROC)) {
-				getGoalsForUserSproc.CommandType = CommandType.StoredProcedure;
-				peerReviewDb.AddInParameter(getGoalsForUserSproc,"userId",DbType.Int16,id);
-				using (IDataReader sprocReader = peerReviewDb.ExecuteReader(getGoalsForUserSproc)) {
-					while (sprocReader.Read()) {
-						goals.Add(new Goal {
-							Id = (int) sprocReader["goalId"],
-							BeginDateTime = (DateTime) sprocReader["beginDate"],
-							Details = sprocReader["details"].ToString(),
-							EndDateTime = (DateTime) sprocReader["endDate"],
-							IsActive = (bool) sprocReader["isActive"],
-							Title = sprocReader["title"].ToString()
-						});
-					}
-				}
-				_user.Goals = goals;
-			}
+			GoalRepository goalRepo = new GoalRepository();
+			_user.Goals = goalRepo.GetGoalsByUserId(id);
 
 			// Get the user's manager
 			using (DbCommand getUserManagerSproc = peerReviewDb.GetSqlStringCommand(GET_MANAGER_SPROC)) {
