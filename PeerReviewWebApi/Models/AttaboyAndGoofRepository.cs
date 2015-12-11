@@ -105,29 +105,26 @@ namespace PeerReviewWebApi.Models {
 		}
 
 		public IEnumerable<AttaboyAndGoof> GetAllAttaboysAndGoofs(int userId) {
-			throw new NotImplementedException();
-		}
-
-		//public IEnumerable<AttaboyAndGoof> GetAllAttaboysAndGoofs(int userId) {
-		//	Collection<AttaboyAndGoof> attaboysAndGoofs = new Collection<AttaboyAndGoof>();
+            //Collection<AttaboyAndGoof> attaboysAndGoofs = new Collection<AttaboyAndGoof>();
 			
-		//	using (
-		//		DbCommand getGoalsForUserSproc = _peerReviewDb.GetSqlStringCommand(GET_ALL_ATTABOYS_AND_GOOFS_SPROC)) {
-		//		getGoalsForUserSproc.CommandType = CommandType.StoredProcedure;
-		//		_peerReviewDb.AddInParameter(getGoalsForUserSproc, "userId", DbType.Int16, userId);
-		//		using (IDataReader sprocReader = _peerReviewDb.ExecuteReader(getGoalsForUserSproc)) {
-		//			while (sprocReader.Read()) {
-		//				attaboysAndGoofs.Add(new AttaboyAndGoof{
-		//					Id = (int)sprocReader["feedbackId"],
-		//					DateTimeSubmitted = (DateTime)sprocReader["submitted"],
-		//					Comment = sprocReader["comment"].ToString(),
-		//					IsAnonymous = (bool)sprocReader["isAnonymous"],
-		//					SubmitterId = (int)sprocReader["submitterId"]
-		//				});
-		//			}
-		//		}
-		//	}
-		//	return attaboysAndGoofs;
-		//}
+            //using (
+            //    DbCommand getGoalsForUserSproc = _peerReviewDb.GetSqlStringCommand(GET_ALL_ATTABOYS_AND_GOOFS_SPROC)) {
+            //    getGoalsForUserSproc.CommandType = CommandType.StoredProcedure;
+            //    _peerReviewDb.AddInParameter(getGoalsForUserSproc, "userId", DbType.Int16, userId);
+            //    using (IDataReader sprocReader = _peerReviewDb.ExecuteReader(getGoalsForUserSproc)) {
+            //        while (sprocReader.Read()) {
+            //            attaboysAndGoofs.Add(new AttaboyAndGoof{
+            //                Id = (int)sprocReader["feedbackId"],
+            //                DateTimeSubmitted = (DateTime)sprocReader["submitted"],
+            //                Comment = sprocReader["comment"].ToString(),
+            //                IsAnonymous = (bool)sprocReader["isAnonymous"],
+            //                SubmitterId = (int)sprocReader["submitterId"]
+            //            });
+            //        }
+            //    }
+            //}
+            //return attaboysAndGoofs;
+		    throw new NotImplementedException();
+		}
 	}
 }

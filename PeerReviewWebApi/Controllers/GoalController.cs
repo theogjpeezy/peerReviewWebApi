@@ -8,7 +8,7 @@ using PeerReviewWebApi.Models;
 
 namespace PeerReviewWebApi.Controllers
 {
-	[EnableCors("*", "*", "*")]
+	[EnableCors("*", "*", "GET,DELETE,POST,PUT")]
     public class GoalController : ApiController
     {
 		static readonly IGoalRepository GoalRepo = new GoalRepository();
