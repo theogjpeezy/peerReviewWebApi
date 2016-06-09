@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -227,6 +228,7 @@
     <Compile Include="Models\Attaboy.cs" />
     <Compile Include="Models\AttaboyAndGoof.cs" />
     <Compile Include="Models\AttaboyAndGoofRepository.cs" />
+    <Compile Include="Models\Feedback.cs" />
     <Compile Include="Models\Goal.cs" />
     <Compile Include="Models\GoalFeedback.cs" />
     <Compile Include="Models\GoalFeedbackRepository.cs" />
